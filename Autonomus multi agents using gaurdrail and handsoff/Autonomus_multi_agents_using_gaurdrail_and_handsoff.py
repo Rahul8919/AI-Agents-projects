@@ -251,12 +251,12 @@ planner_with_handoff = planner_agent.clone(
     + "\n\nWhen you have produced the SearchPlan, call the handoff tool 'handoff_to_writer'"),
     handoffs=[handoff_to_writer])
     
-async def run_handoff_from_planna_to_tritter(user_input: str):
-    print(f"""User Query: {user_input}""")
-    report_res = await Runner.run(planner_with_handoff, user_input, session=session)
-    report=report_res.final_output
-    print(f"""Final Report:\n{report.staticmethod}""")
-    print(f"""short summary:\n{report.full_report}""")
+# async def run_handoff_from_planna_to_tritter(user_input: str):
+#     print(f"""User Query: {user_input}""")
+#     report_res = await Runner.run(planner_with_handoff, user_input, session=session)
+#     report=report_res.final_output
+#     print(f"""Final Report:\n{report.staticmethod}""")
+#     print(f"""short summary:\n{report.full_report}""")
     
     
     
