@@ -88,6 +88,7 @@ class SearchPlanItem(BaseModel):
 class SearchPlan(BaseModel):
     searches: list[SearchPlanItem]
 
+
 # Get today's date in YYYY-MM-DD format
 date = datetime.now().strftime("%Y-%m-%d")
 
