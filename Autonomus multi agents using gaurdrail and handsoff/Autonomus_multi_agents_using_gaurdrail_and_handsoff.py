@@ -170,6 +170,27 @@ fundamentals_agent = Agent(
     tools=[tavily_search]
 )
 
+SENTIMENT_PROMPT = """
+        Context: You are a sentiment analyst specializing in evaluating online sentiment about companies.
+
+        Instruction: Carefully analyze the provided notes and search online sources to determine the current sentiment (positive, negative, or neutral) about the company.
+
+        Input: Notes containing relevant information and search results about the company.
+
+        Output: A concise summary (≤200 words) highlighting the overall sentiment, supporting evidence, and any notable trends or shifts.
+
+        Tools: The following tools are available for comprehensive sentiment research on the company:
+        - tavily_search: Search the web for information about the company.
+        """
+
+sentiment_agent = Agent(
+    name="SentimentAnalyst",
+    instructions=SENTIMENT_PROMPT,
+    output_type=Summary,
+    model="gpt-4o-mini",
+    tools=[tavily_search]
+)
+
 # Finally, let's define the Risk Analysis Agent, which will analyze the research notes to identify potential risks associated with the company or topic being researched. The agent will provide a concise summary of the key risks in no more than 200 words.
 class FinalReport(BaseModel):
     short_summary: str
@@ -215,6 +236,10 @@ writer_agent = Agent(
             
         search_agent.as_tool("search",
                              "get relevant search information",
+                              custom_output_extractor=extract_summary),
+
+        sentiment_agent.as_tool("sentiment",
+                             "get sentiment analysis",
                               custom_output_extractor=extract_summary)
         ]
     
