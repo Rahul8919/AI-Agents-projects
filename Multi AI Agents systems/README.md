@@ -158,3 +158,4 @@ This project demonstrates several **Agentic AI engineering concepts**, including
 
 Rahul
 Agentic AI / Generative AI Developer
+Specializing in AI Agents, Agentic AI Systems, and LLM-powered applications.
