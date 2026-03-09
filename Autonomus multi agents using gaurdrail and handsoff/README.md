@@ -1,4 +1,4 @@
-# AI Research Multi-Agent System with Guardrails
+# AI Research Multi-Agent System with Guardrails & handoff
 
 ## Overview
 
