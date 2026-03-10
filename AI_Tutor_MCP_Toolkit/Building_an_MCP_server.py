@@ -175,37 +175,105 @@ def quiz_me(topic: str, level: int = 3, num_questions: int = 5) -> Generator[str
             partial += delta
             yield partial
             
+            
+            
+def explain_concept_in_language(question: str, level: int, language: str) -> Generator[str, None, None]:
+    """Stream an explanation of *question* at the requested *level* (1-5) in the specified *language*.
+    Need: question, level, language"""
+
+    if not question.strip():
+        yield "Error: question cannot be blank."
+        return
+
+    level_desc = EXPLANATION_LEVELS.get(level, "clearly and concisely")
+    system_prompt = "You are a helpful AI Tutor. Explain the following concept " \
+        f"{level_desc} in the following language: {language}"
+
+    _stream = client.chat.completions.create(
+        model = MODEL_NAME,
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": question},
+        ],
+        stream = True,
+        temperature = 0.7,
+    )
+
+    partial = ""
+    for chunk in _stream:
+        delta = getattr(chunk.choices[0].delta, "content", None)
+        if delta:
+            partial += delta
+            yield partial
+            
 #building gradio UI interface 
+# def build_demo():
+#     with gr.Blocks() as demo:
+#         gr.Markdown("# AI Tutor MCP Toolkit - Demo Console")
+
+#         with gr.Tab("Explain Concept"):
+#             q = gr.Textbox(label="Concept / Question")
+#             lvl = gr.Slider(1, 5, value=3, step=1, label="Explanation Level")
+#             out1 = gr.Markdown()
+#             gr.Button("Explain").click(explain_concept, inputs=[q, lvl], outputs=out1)
+
+#         with gr.Tab("Summarize Text"):
+#             txt = gr.Textbox(lines=8, label="Long Text")
+#             ratio = gr.Slider(0.1, 0.8, value=0.3, step=0.05, label="Compression Ratio")
+#             out2 = gr.Markdown()
+#             gr.Button("Summarize").click(summarize_text, inputs=[txt, ratio], outputs=out2)
+
+#         with gr.Tab("Flashcards"):
+#             topic_fc = gr.Textbox(label="Topic")
+#             n_fc = gr.Slider(1, 20, value=5, step=1, label="# Cards")
+#             out3 = gr.Markdown()
+#             gr.Button("Generate").click(generate_flashcards, inputs=[topic_fc, n_fc], outputs=out3)
+
+#         with gr.Tab("Quiz Me"):
+#             topic_q = gr.Textbox(label="Topic")
+#             lvl_q = gr.Slider(1, 5, value=3, step=1, label="Difficulty Level")
+#             n_q = gr.Slider(1, 15, value=5, step=1, label="# Questions")
+#             out4 = gr.Markdown()
+#             gr.Button("Start Quiz").click(quiz_me, inputs=[topic_q, lvl_q, n_q], outputs=out4)
+
+#         return demo
 def build_demo():
     with gr.Blocks() as demo:
-        gr.Markdown("# AI Tutor MCP Toolkit - Demo Console")
+        gr.Markdown("# AI Tutor MCP Toolkit – Demo Console")
 
         with gr.Tab("Explain Concept"):
-            q = gr.Textbox(label="Concept / Question")
-            lvl = gr.Slider(1, 5, value=3, step=1, label="Explanation Level")
+            q = gr.Textbox(label = "Concept / Question")
+            lvl = gr.Slider(1, 5, value = 3, step = 1, label = "Explanation Level")
             out1 = gr.Markdown()
-            gr.Button("Explain").click(explain_concept, inputs=[q, lvl], outputs=out1)
+            gr.Button("Explain").click(explain_concept, inputs = [q, lvl], outputs = out1)
+
+        with gr.Tab("Explain Concept in Language"):
+            q = gr.Textbox(label = "Concept / Question")
+            lvl = gr.Slider(1, 5, value = 3, step = 1, label = "Explanation Level")
+            lang = gr.Textbox(label = "Language")
+            out2 = gr.Markdown()
+            gr.Button("Explain").click(explain_concept_in_language, inputs = [q, lvl, lang], outputs = out2)
 
         with gr.Tab("Summarize Text"):
-            txt = gr.Textbox(lines=8, label="Long Text")
-            ratio = gr.Slider(0.1, 0.8, value=0.3, step=0.05, label="Compression Ratio")
-            out2 = gr.Markdown()
-            gr.Button("Summarize").click(summarize_text, inputs=[txt, ratio], outputs=out2)
+            txt = gr.Textbox(lines = 8, label = "Long Text")
+            ratio = gr.Slider(0.1, 0.8, value = 0.3, step = 0.05, label = "Compression Ratio")
+            out3 = gr.Markdown()
+            gr.Button("Summarize").click(summarize_text, inputs = [txt, ratio], outputs = out3)
 
         with gr.Tab("Flashcards"):
-            topic_fc = gr.Textbox(label="Topic")
-            n_fc = gr.Slider(1, 20, value=5, step=1, label="# Cards")
-            out3 = gr.Markdown()
-            gr.Button("Generate").click(generate_flashcards, inputs=[topic_fc, n_fc], outputs=out3)
+            topic_fc = gr.Textbox(label = "Topic")
+            n_fc = gr.Slider(1, 20, value = 5, step = 1, label = "# Cards")
+            out4 = gr.Markdown()
+            gr.Button("Generate").click(generate_flashcards, inputs = [topic_fc, n_fc], outputs = out4)
 
         with gr.Tab("Quiz Me"):
-            topic_q = gr.Textbox(label="Topic")
-            lvl_q = gr.Slider(1, 5, value=3, step=1, label="Difficulty Level")
-            n_q = gr.Slider(1, 15, value=5, step=1, label="# Questions")
-            out4 = gr.Markdown()
-            gr.Button("Start Quiz").click(quiz_me, inputs=[topic_q, lvl_q, n_q], outputs=out4)
+            topic_q = gr.Textbox(label = "Topic")
+            lvl_q = gr.Slider(1, 5, value = 3, step = 1, label = "Difficulty Level")
+            n_q = gr.Slider(1, 15, value = 5, step = 1, label = "# Questions")
+            out5 = gr.Markdown()
+            gr.Button("Start Quiz").click(quiz_me, inputs = [topic_q, lvl_q, n_q], outputs = out5)
 
-        return demo
+    return demo
 
 
 if __name__ == "__main__":

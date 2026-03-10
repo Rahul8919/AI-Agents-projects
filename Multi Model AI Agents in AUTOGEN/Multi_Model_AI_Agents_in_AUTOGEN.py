@@ -93,13 +93,13 @@ social_media_agent_claude = autogen.ConversableAgent(
 print("Social Media Strategist agent initialized successfully")
 
 initial_task_message = """
-Context: We're launching a new sustainable shoe line and need campaign ideas
-Instruction: Brainstorm a campaign concept with specific elements
-Input: Our sustainable, futuristic shoe brand needs marketing direction
-Output: A concise campaign concept with the following structure:
-Brand Marketer, let's brainstorm initial campaign ideas for our new sustainable shoe line.
-Give me a distinct campaign concept. Outline: core idea, target audience, primary channels, and 1-2 KPIs. Keep it concise. Try to arrive at a final answer.
-"""
+    Context: We're launching a new sustainable shoe line and need campaign ideas
+    Instruction: Brainstorm a campaign concept with specific elements
+    Input: Our sustainable, futuristic shoe brand needs marketing direction
+    Output: A concise campaign concept with the following structure:
+    Brand Marketer, let's brainstorm initial campaign ideas for our new sustainable shoe line.
+    Give me a distinct campaign concept. Outline: core idea, target audience, primary channels, and 1-2 KPIs. Keep it concise. Try to arrive at a final answer.
+    """
 #start of one agent to another agent conversation for testing
 # chat_result_openai_only = CMO_AGENT_GEMINI.initiate_chat(
 #     recipient = BRAND_MARKERTING_AGENT_OPENAI,
@@ -148,7 +148,12 @@ group_manager = GroupChatManager(
 try:
     group_chat_result = group_manager.initiate_chat(
         recipient = user_proxy_agent,    # Start by talking to the Gemini CMO
-        message = """Hello team!"""
+        message = """Let's develop a TikTok campaign for our shoes targeting Gen Z.
+    
+        CMO (Gemini): Please outline the strategic goals.
+        Brand Marketer (OpenAI): Suggest a campaign hook.
+        Social Media Strategist (Claude): Provide a social media plan""",
+        max_turns = 10
     )
 except Exception as e:
     print("Agent system failed:", e)
