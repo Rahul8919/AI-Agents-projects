@@ -6,25 +6,6 @@ The system enables an AI agent to interact with streaming educational tools thro
 
 This project demonstrates Agentic AI architecture, where an AI agent dynamically decides which tool to use to fulfill a user request.
 
-System Architecture Diagram
-
-User
- │
- ▼
-AI Tutor Agent (OpenAI Agents SDK)
- │
- ▼
-MCP Server (Gradio)
- │
- ▼
-Available Tools
- ├─ explain_concept
- ├─ summarize_text
- ├─ generate_flashcards
- ├─ quiz_me
- └─ explain_concept_in_language
- 
-
 🚀 Features
 
 The AI Tutor provides the following learning tools:
