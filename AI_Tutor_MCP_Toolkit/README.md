@@ -23,6 +23,7 @@ Available Tools
  ├─ generate_flashcards
  ├─ quiz_me
  └─ explain_concept_in_language
+ 
 
 🚀 Features
 
