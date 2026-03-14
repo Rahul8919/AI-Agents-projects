@@ -1,3 +1,4 @@
+from langchain_core.tools import tool
 @tool
 def search_hotels_tool(city_code: str, check_in_date: str, check_out_date: str, adults: int = 1):
     """

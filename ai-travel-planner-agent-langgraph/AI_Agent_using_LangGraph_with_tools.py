@@ -167,12 +167,56 @@ def app_call(app_search_flight, messages):
 app_search_flight = build_graph_one_tool(tools_list)
 
 
-messages = "What's the latest news on France in May 2025? Is it a good time to visit?"
-output, history = app_call(app_search_flight, messages)
+# messages = "What's the latest news on France in May 2025? Is it a good time to visit?"
+# output, history = app_call(app_search_flight, messages)
 
-print("\n==================== OUTPUT ====================")
-print(output)
+# print("\n==================== OUTPUT ====================")
+# print(output)
 
-print("\n==================== HISTORY ====================")
-print(history)
+# print("\n==================== HISTORY ====================")
+# print(history)
 
+def travel_agent_chat(user_input: str, history=None):
+    tools_used = []
+    stream = app_search_flight.stream(
+        {"messages": [HumanMessage(content=user_input)]},
+        config={"recursion_limit": 15, "configurable": {"thread_id": str(uuid.uuid4())}},
+    )
+
+    # 1) Stream in tool calls and model tokens
+    for chunk in stream:
+        _, node = next(iter(chunk.items()))
+        if isinstance(node, dict) and "messages" in node:
+            for msg in node["messages"]:
+                if isinstance(msg, ToolMessage):
+                    if msg.name not in tools_used:
+                        tools_used.append(msg.name)
+                        yield f"\n\n**Tool:** {msg.name}\n{msg.content}\n\n---\n\n"
+                elif isinstance(msg, AIMessage) and msg.content:
+                    yield msg.content
+
+    # 2) After streaming completes, yield a recap
+    if tools_used:
+        yield f"\n\n**Tools used this session:** {', '.join(tools_used)}\n\n---\n\n{msg.content}"
+    
+
+travel_chatbot_interface = gr.ChatInterface(
+    fn = travel_agent_chat,
+    chatbot = gr.Chatbot(
+        height = 650,
+        label = "AI Travel Agent",
+    ),
+    textbox = gr.Textbox(
+        placeholder = "Plan your trip! Ask about attractions, flights, hotels...", container = False, scale = 7
+    ),
+    title = "✈️ LangGraph AI Travel Agent 🌍",
+    description = "Your stateful travel assistant.",
+    examples = [
+        ["What are the top 3 tourist attractions in the world?"],
+        ["Find flights from London (LHR) to Paris (CDG) leaving next month for 4-day trip"],
+        ["Book a hotel for 5 nights in Hyderabad next month"],
+    ],
+    cache_examples = False,
+)
+
+travel_chatbot_interface.launch()

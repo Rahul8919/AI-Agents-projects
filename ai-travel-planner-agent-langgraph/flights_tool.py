@@ -1,3 +1,11 @@
+import os
+from langchain_core.tools import tool
+from dotenv import load_dotenv
+
+load_dotenv()
+
+amadeus_api_key = os.getenv("AMADEUS_CLIENT_ID")
+amadeus_api_secret = os.getenv("AMADEUS_CLIENT_SECRET")
 # Service clients
 from amadeus import Client, ResponseError
 

@@ -1,3 +1,4 @@
+from langchain_core.tools import tool
 @tool
 def get_current_date_tool():
     """Returns the current date in 'YYYY-MM-DD' format. Useful for finding flights/hotels relative to today."""
