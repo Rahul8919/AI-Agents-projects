@@ -23,11 +23,11 @@ Current Date Tool	Retrieve current date
 
 
 Tech Stack
-Python
-LangGraph
-LangChain
-OpenAI API
-Tavily Search API
+Python,
+LangGraph,
+LangChain,
+OpenAI API,
+Tavily Search API.
 
 Run the Project
 pip install -r requirements.txt
